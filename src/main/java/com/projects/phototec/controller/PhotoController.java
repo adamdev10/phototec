@@ -8,6 +8,7 @@ import com.projects.phototec.service.PhotoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +24,7 @@ public class PhotoController {
     public PhotoController(PhotoService photoService) {
         this.photoService = photoService;
     }
+
 
     @GetMapping("/{id}")
     public PhotoResponse get(@PathVariable Long id) {

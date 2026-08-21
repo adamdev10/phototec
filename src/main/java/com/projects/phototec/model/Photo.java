@@ -31,14 +31,19 @@ public class Photo {
     @ManyToMany(mappedBy = "photos")
     private List<Album> albums;
 
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private User owner;
+
     public Photo() {
 
     }
 
-    public Photo(String fileName, String contentType, byte[] data) {
+    public Photo(String fileName, String contentType, byte[] data, User owner) {
         this.data = data;
         this.contentType = contentType;
         this.fileName = fileName;
+        this.owner = owner;
         this.albums = new ArrayList<>();
     }
 
@@ -72,6 +77,14 @@ public class Photo {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
     public List<Album> getAlbums() {

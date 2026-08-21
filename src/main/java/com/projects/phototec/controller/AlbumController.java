@@ -40,9 +40,8 @@ public class AlbumController {
     }
 
     @PostMapping()
-    public ResponseEntity<AlbumResponse> create(@RequestBody CreateAlbumRequest createAlbumRequest, Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        AlbumResponse response = albumService.create(createAlbumRequest, user);
+    public ResponseEntity<AlbumResponse> create(@RequestBody CreateAlbumRequest createAlbumRequest) {
+        AlbumResponse response = albumService.create(createAlbumRequest);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)

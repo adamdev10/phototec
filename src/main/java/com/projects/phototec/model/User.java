@@ -37,10 +37,22 @@ public class User implements UserDetails {
 
     private String lastName;
 
+    @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(
+            mappedBy = "owner",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private List<Album> albums;
+
+    @OneToMany(
+            mappedBy = "owner",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Photo> photos;
 
 
     public User() {
@@ -120,6 +132,7 @@ public class User implements UserDetails {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
 
     public Role getRole() {
         return role;
