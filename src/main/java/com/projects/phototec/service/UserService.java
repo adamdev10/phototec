@@ -7,6 +7,7 @@ import com.projects.phototec.exception.ResourceNotFoundException;
 import com.projects.phototec.mapper.UserMapper;
 import com.projects.phototec.model.User;
 import com.projects.phototec.repository.UserRepository;
+import com.projects.phototec.security.CurrentUser;
 import com.projects.phototec.security.Role;
 import jakarta.transaction.Transactional;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,19 +25,27 @@ public class UserService {
 
     private final UserMapper userMapper;
 
+    private final CurrentUser currentUser;
+
     public UserService(
         UserRepository userRepository,
         PasswordEncoder passwordEncoder,
-        UserMapper userMapper
+        UserMapper userMapper,
+        CurrentUser currentUser
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
+        this.currentUser = currentUser;
     }
 
     @PreAuthorize("hasRole('ADMIN') or @userSecurity.isOwner(#id)")
     public UserResponse get(Long id) {
         return userMapper.toResponse(getUser(id));
+    }
+
+    public UserResponse getCurrentUser() {
+        return userMapper.toResponse(currentUser.get());
     }
 
     @PreAuthorize("hasRole('ADMIN')")

@@ -39,6 +39,11 @@ public class UserController {
         return userService.get(id);
     }
 
+    @GetMapping("/me")
+    public UserResponse get() {
+        return userService.getCurrentUser();
+    }
+
     @GetMapping
     public List<UserResponse> getAll() {
         return userService.getAll();

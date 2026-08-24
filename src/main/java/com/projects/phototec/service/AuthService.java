@@ -57,6 +57,6 @@ public class AuthService {
 
         User user = (User) authentication.getPrincipal();
 
-        return new LoginResponse(jwt, user.getId());
+        return new LoginResponse(jwt);
     }
 }
