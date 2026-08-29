@@ -25,8 +25,7 @@ public class Photo {
 
     private String contentType;
 
-    @Column(columnDefinition = "bytea")
-    private byte[] data;
+    private String key;
 
     @ManyToMany(mappedBy = "photos")
     private List<Album> albums;
@@ -39,8 +38,8 @@ public class Photo {
 
     }
 
-    public Photo(String fileName, String contentType, byte[] data, User owner) {
-        this.data = data;
+    public Photo(String fileName, String contentType, String key, User owner) {
+        this.key = key;
         this.contentType = contentType;
         this.fileName = fileName;
         this.owner = owner;
@@ -55,12 +54,12 @@ public class Photo {
         this.id = id;
     }
 
-    public byte[] getData() {
-        return data;
+    public String getKey() {
+        return key;
     }
 
-    public void setData(byte[] data) {
-        this.data = data;
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getContentType() {
@@ -101,7 +100,7 @@ public class Photo {
                 "id=" + id +
                 ", fileName='" + fileName + '\'' +
                 ", contentType='" + contentType + '\'' +
-                ", data=" + Arrays.toString(data) +
+                ", key=" + key +
                 ", albums=" + albums +
                 '}';
     }

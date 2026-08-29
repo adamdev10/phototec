@@ -11,9 +11,11 @@ import com.projects.phototec.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
+@ConfigurationPropertiesScan
 public class PhototecApplication {
 
 	public static void main(String[] args) {
@@ -40,8 +42,8 @@ public class PhototecApplication {
 			userRepository.save(admin);
 
 
-			Photo photo = new Photo("minero.jpg", "image/png", new byte[0], user1);
-			Photo photo2 = new Photo("formal.gif", "image/gif", new byte[0], user2);
+			Photo photo = new Photo("minero.jpg", "image/png", "key-123-213", user1);
+			Photo photo2 = new Photo("formal.gif", "image/gif", "key-896-675", user2);
 
 
 			Album album = new Album("Japan", user1);

@@ -1,7 +1,6 @@
 package com.projects.phototec.service;
 
-import com.projects.phototec.dto.AlbumResponse;
-import com.projects.phototec.dto.CreatePhotoRequest;
+
 import com.projects.phototec.dto.PatchPhotoRequest;
 import com.projects.phototec.dto.PhotoResponse;
 import com.projects.phototec.exception.ResourceNotFoundException;
@@ -11,8 +10,6 @@ import com.projects.phototec.model.Photo;
 import com.projects.phototec.repository.PhotoRepository;
 import com.projects.phototec.security.CurrentUser;
 import jakarta.transaction.Transactional;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,20 +24,28 @@ public class PhotoService {
     private final PhotoRepository photoRepository;
     private final PhotoMapper photoMapper;
     private final CurrentUser currentUser;
+    private final StorageService storageService;
+
 
     public PhotoService(
             PhotoRepository photoRepository,
             PhotoMapper photoMapper,
-            CurrentUser currentUser
+            CurrentUser currentUser,
+            StorageService storageService
     ) {
         this.photoRepository = photoRepository;
         this.photoMapper = photoMapper;
         this.currentUser = currentUser;
+        this.storageService = storageService;
     }
 
     @PreAuthorize("@photoSecurity.isOwner(#id)")
     public PhotoResponse get(Long id) {
         return photoMapper.toResponse(getPhoto(id));
+    }
+
+    public byte[] getContent(Photo photo) {
+        return storageService.download(photo.getKey());
     }
 
     public Photo getPhoto(Long id) {
@@ -66,28 +71,35 @@ public class PhotoService {
             album.removePhoto(photo);
         }
 
+        storageService.delete(photo.getKey());
         photoRepository.delete(photo);
         return photoMapper.toResponse(photo);
     }
 
-    public Photo savePhoto(MultipartFile file) throws IOException {
+    public Photo savePhoto(MultipartFile file) {
+        String key = storageService.upload(file);
+
         return photoRepository.save(
                 new Photo(
                         file.getOriginalFilename(),
                         file.getContentType(),
-                        file.getBytes(),
+                        key,
                         currentUser.get()
                 )
         );
     }
 
     @PreAuthorize("@photoSecurity.isOwner(#id)")
-    public PhotoResponse replace(Long id, MultipartFile file) throws IOException {
+    public PhotoResponse replace(Long id, MultipartFile file) {
         Photo photo = getPhoto(id);
+        String oldKey = photo.getKey();
+        String newKey = storageService.upload(file);
+        photo.setKey(newKey);
         photo.setFileName(file.getOriginalFilename());
         photo.setContentType(file.getContentType());
-        photo.setData(file.getBytes());
-        return photoMapper.toResponse(photoRepository.save(photo));
+        PhotoResponse response = photoMapper.toResponse(photoRepository.save(photo));
+        storageService.delete(oldKey);
+        return response;
     }
 
     @PreAuthorize("@photoSecurity.isOwner(#id)")

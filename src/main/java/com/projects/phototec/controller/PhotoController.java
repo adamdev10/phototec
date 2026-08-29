@@ -32,14 +32,15 @@ public class PhotoController {
     }
 
     @GetMapping("/{id}/content")
-    public ResponseEntity<byte[]> getContent(@PathVariable Long id) {
+    public ResponseEntity<byte[]> getContent(@PathVariable Long id) throws IOException {
         Photo photo = photoService.getPhoto(id);
 
         return ResponseEntity.ok()
                 .contentType(
                         MediaType.parseMediaType(photo.getContentType())
                 )
-                .body(photo.getData());
+                .body(photoService.getContent(photo));
+
     }
 
     @GetMapping()
