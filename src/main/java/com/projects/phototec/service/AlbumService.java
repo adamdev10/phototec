@@ -126,7 +126,7 @@ public class AlbumService {
 
     @PreAuthorize("@albumSecurity.isOwner(#albumId)")
     @Transactional
-    public PhotoResponse addNewPhotoToAlbum(Long albumId, MultipartFile file) throws IOException {
+    public PhotoResponse addNewPhotoToAlbum(Long albumId, MultipartFile file){
         Album album = getAlbum(albumId);
         Photo photo = photoService.savePhoto(file);
 

@@ -5,6 +5,7 @@ import com.projects.phototec.model.Photo;
 import com.projects.phototec.service.AlbumService;
 import com.projects.phototec.service.PhotoService;
 import com.projects.phototec.service.UserService;
+import jakarta.validation.Valid;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +51,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<Void> register(@Valid @RequestBody RegisterRequest registerRequest) {
 
         userService.register(registerRequest.username(), registerRequest.password());
 

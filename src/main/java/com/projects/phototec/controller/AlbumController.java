@@ -1,17 +1,13 @@
 package com.projects.phototec.controller;
 
 import com.projects.phototec.dto.*;
-import com.projects.phototec.model.User;
 import com.projects.phototec.service.AlbumService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.sound.midi.Patch;
-import java.io.IOException;
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController
@@ -40,7 +36,7 @@ public class AlbumController {
     }
 
     @PostMapping()
-    public ResponseEntity<AlbumResponse> create(@RequestBody CreateAlbumRequest createAlbumRequest) {
+    public ResponseEntity<AlbumResponse> create(@Valid @RequestBody CreateAlbumRequest createAlbumRequest) {
         AlbumResponse response = albumService.create(createAlbumRequest);
 
         return ResponseEntity
@@ -58,7 +54,7 @@ public class AlbumController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<AlbumResponse> update(@PathVariable Long id, @RequestBody PatchAlbumRequest patchAlbumRequest) {
+    public ResponseEntity<AlbumResponse> update(@PathVariable Long id, @Valid @RequestBody PatchAlbumRequest patchAlbumRequest) {
         AlbumResponse response = albumService.update(id, patchAlbumRequest);
 
         return ResponseEntity
@@ -69,7 +65,7 @@ public class AlbumController {
     @PostMapping("/{id}/photos")
     public ResponseEntity<Void> addPhoto(
             @PathVariable Long id,
-            @RequestBody AddPhotoAlbumRequest request
+            @Valid @RequestBody AddPhotoAlbumRequest request
     ) {
         albumService.addPhotoToAlbum(id, request.id());
 
@@ -87,7 +83,7 @@ public class AlbumController {
     public ResponseEntity<PhotoResponse> addNewPhoto(
             @PathVariable Long id,
             @RequestParam MultipartFile file
-    ) throws IOException {
+    ){
         PhotoResponse response = albumService.addNewPhotoToAlbum(id, file);
 
         return ResponseEntity

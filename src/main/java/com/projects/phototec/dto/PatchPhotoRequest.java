@@ -3,6 +3,6 @@ package com.projects.phototec.dto;
 import jakarta.validation.constraints.NotBlank;
 
 public record PatchPhotoRequest(
-        @NotBlank
+        @NotBlank(message = "fileName is required")
         String fileName
 ) {}

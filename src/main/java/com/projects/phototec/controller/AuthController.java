@@ -4,6 +4,7 @@ import com.projects.phototec.dto.LoginRequest;
 import com.projects.phototec.dto.LoginResponse;
 import com.projects.phototec.security.Role;
 import com.projects.phototec.service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -33,7 +34,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LoginRequest loginRequest) {
+    public LoginResponse login(@Valid @RequestBody LoginRequest loginRequest) {
         return authService.login(loginRequest);
     }
 }

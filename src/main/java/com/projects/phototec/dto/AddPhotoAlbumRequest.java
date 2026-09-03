@@ -1,9 +1,9 @@
 package com.projects.phototec.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record AddPhotoAlbumRequest(
-        @NotBlank
+        @NotNull(message = "album id is required")
         Long id
 ) {
 }

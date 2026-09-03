@@ -14,7 +14,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +57,10 @@ public class PhotoService {
         return photoMapper.toResponseList(photoRepository.findAll());
     }
 
-    public PhotoResponse create(MultipartFile file) throws IOException {
+    public PhotoResponse create(MultipartFile file){
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("file is required");
+        }
         return photoMapper.toResponse(savePhoto(file));
     }
 
