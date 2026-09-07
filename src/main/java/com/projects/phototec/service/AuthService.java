@@ -2,7 +2,6 @@ package com.projects.phototec.service;
 
 import com.projects.phototec.dto.LoginRequest;
 import com.projects.phototec.dto.LoginResponse;
-import com.projects.phototec.model.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -54,8 +53,6 @@ public class AuthService {
         String jwt = jwtEncoder
                 .encode(JwtEncoderParameters.from(claims))
                 .getTokenValue();
-
-        User user = (User) authentication.getPrincipal();
 
         return new LoginResponse(jwt);
     }

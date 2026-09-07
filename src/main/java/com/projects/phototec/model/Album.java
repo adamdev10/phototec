@@ -21,7 +21,6 @@ public class Album {
     )
     private Long id;
 
-    @Column(unique = true)
     private String name;
 
     @ManyToOne

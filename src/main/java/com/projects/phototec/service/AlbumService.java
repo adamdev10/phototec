@@ -71,9 +71,9 @@ public class AlbumService {
     }
 
     public AlbumResponse create(CreateAlbumRequest createAlbumRequest) {
-        existsByName(createAlbumRequest.name());
-        Optional<User> owner = userRepository.findByUsername(currentUser.get().getUsername());
-        return albumMapper.toResponse(albumRepository.save(new Album(createAlbumRequest.name(), owner.get())));
+        existsByNameAndOwner(createAlbumRequest.name(), currentUser.get().getId());
+        User owner = currentUser.get();
+        return albumMapper.toResponse(albumRepository.save(new Album(createAlbumRequest.name(), owner)));
     }
 
     @PreAuthorize("@albumSecurity.isOwner(#id)")
@@ -85,7 +85,7 @@ public class AlbumService {
 
     @PreAuthorize("@albumSecurity.isOwner(#id)")
     public AlbumResponse update(Long id, PatchAlbumRequest patchAlbumRequest) {
-        existsByName(patchAlbumRequest.name());
+        existsByNameAndOwner(patchAlbumRequest.name(), currentUser.get().getId());
         Album album = getAlbum(id);
         album.setName(patchAlbumRequest.name());
         return albumMapper.toResponse(albumRepository.save(album));
@@ -152,6 +152,11 @@ public class AlbumService {
 
     private void existsByName(String name) {
         if (!albumRepository.findAlbumByName(name).isEmpty())
+            throw new ResourceAlreadyExistsException("Album already exists, name: " + name);
+    }
+
+    private void existsByNameAndOwner(String name, Long ownerId) {
+        if (albumRepository.findAlbumByNameAndOwnerId(name, ownerId).isPresent())
             throw new ResourceAlreadyExistsException("Album already exists, name: " + name);
     }
 }
