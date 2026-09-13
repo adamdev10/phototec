@@ -135,7 +135,7 @@ public class AlbumService {
         return photoMapper.toResponse(photo);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or @albumSecurity.isOwner(#id)")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isOwner(#id)")
     public List<AlbumResponse> getUserAlbumsById(Long id) {
         return albumRepository.findAllByOwnerId(id)
                 .stream()

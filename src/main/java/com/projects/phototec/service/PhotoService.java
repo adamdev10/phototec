@@ -43,7 +43,9 @@ public class PhotoService {
         return photoMapper.toResponse(getPhoto(id));
     }
 
-    public byte[] getContent(Photo photo) {
+    @PreAuthorize("@photoSecurity.isOwner(#id)")
+    public byte[] getContent(Long id) {
+        Photo photo = getPhoto(id);
         return storageService.download(photo.getKey());
     }
 
@@ -113,7 +115,7 @@ public class PhotoService {
     }
 
 
-    @PreAuthorize("hasRole('ADMIN') or @photoSecurity.isOwner(#id)")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isOwner(#id)")
     public List<PhotoResponse> getUserPhotosById(Long id) {
         return photoRepository.findAllByOwnerId(id)
                 .stream()

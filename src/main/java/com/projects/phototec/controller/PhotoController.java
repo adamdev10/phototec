@@ -37,7 +37,7 @@ public class PhotoController {
                 .contentType(
                         MediaType.parseMediaType(photo.getContentType())
                 )
-                .body(photoService.getContent(photo));
+                .body(photoService.getContent(id));
 
     }
 

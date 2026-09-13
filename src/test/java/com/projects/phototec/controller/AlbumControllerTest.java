@@ -1,4 +1,4 @@
-package com.projects.phototec.album;
+package com.projects.phototec.controller;
 
 
 import com.projects.phototec.model.Album;
