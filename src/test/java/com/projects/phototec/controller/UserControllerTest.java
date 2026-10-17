@@ -35,13 +35,7 @@ public class UserControllerTest {
     private UserService userService;
 
     @Autowired
-    private AuthService authService;
-
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private AlbumRepository albumRepository;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -55,12 +49,6 @@ public class UserControllerTest {
         User user = new User(username, "password", Role.ADMIN);
 
         return userRepository.save(user);
-    }
-
-    private Album createAlbum(String name, User owner) {
-        Album album = new Album(name, owner);
-
-        return albumRepository.save(album);
     }
 
     @Test
