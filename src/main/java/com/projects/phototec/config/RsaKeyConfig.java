@@ -11,18 +11,16 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.KeyFactory;
 import com.nimbusds.jose.jwk.RSAKey;
+import org.springframework.security.converter.RsaKeyConverters;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
 
 @Configuration
 public class RsaKeyConfig {
@@ -66,26 +64,14 @@ public class RsaKeyConfig {
     }
 
     private RSAPrivateKey loadPrivateKey() throws Exception {
-        String key = Files.readString(Path.of("keys/private.pem"));
-
-        byte[] decoded = Base64.getDecoder().decode(key);
-
-        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decoded);
-
-        KeyFactory factory = KeyFactory.getInstance("RSA");
-
-        return (RSAPrivateKey) factory.generatePrivate(spec);
+        try (InputStream in = Files.newInputStream(Path.of("keys/private.pem"))) {
+            return RsaKeyConverters.pkcs8().convert(in);
+        }
     }
 
     private RSAPublicKey loadPublicKey() throws Exception {
-        String key = Files.readString(Path.of("keys/public.pem"));
-
-        byte[] decoded = Base64.getDecoder().decode(key);
-
-        X509EncodedKeySpec spec = new X509EncodedKeySpec(decoded);
-
-        KeyFactory factory = KeyFactory.getInstance("RSA");
-
-        return (RSAPublicKey) factory.generatePublic(spec);
+        try (InputStream in = Files.newInputStream(Path.of("keys/public.pem"))) {
+            return RsaKeyConverters.x509().convert(in);
+        }
     }
 }

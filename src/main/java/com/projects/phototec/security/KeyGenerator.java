@@ -18,14 +18,8 @@ public class KeyGenerator {
         var privateKey = keyPair.getPrivate().getEncoded();
         var publicKey = keyPair.getPublic().getEncoded();
 
-        System.out.println("PRIVATE KEY: " + privateKey);
-        System.out.println("PUBLIC KEY: " + publicKey);
-
-        var pemPrivateKey = Base64.getEncoder().encodeToString(privateKey);
-        var pemPublicKey = Base64.getEncoder().encodeToString(publicKey);
-
-        System.out.println("Encoded PRIVATE KEY: " + pemPrivateKey);
-        System.out.println("Encoded PUBLIC KEY: " + pemPublicKey);
+        var pemPrivateKey = toPem("PRIVATE KEY", privateKey);
+        var pemPublicKey = toPem("PUBLIC KEY", publicKey);
 
         Path keysDirectory = Path.of("keys");
         Files.createDirectories(keysDirectory);
@@ -41,5 +35,11 @@ public class KeyGenerator {
         );
 
         System.out.println("RSA keys generated.");
+    }
+
+    private static String toPem(String type, byte[] key) {
+        String base64 = Base64.getMimeEncoder(64, "\n".getBytes()).encodeToString(key);
+
+        return "-----BEGIN " + type + "-----\n" + base64 + "\n-----END " + type + "-----\n";
     }
 }
